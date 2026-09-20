@@ -1,4 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk" TreatAsLocalProperty="Configuration">
+    <!-- 本仓库为 Mono 游戏启动器专用。解决方案以 Debug/Release 驱动构建与还原，但本项目只有
+         Release_Mono / Release_IL2CPP_* 配置。NuGet 的 sln 级 Restore 不经过 sln 配置映射，会把
+         Debug/Release 直接下发，导致 TargetFramework 解析为空而失败。这里把通用配置归一到
+         Release_Mono（Configuration 是命令行全局属性，必须在 Project 上用 TreatAsLocalProperty 声明后才能覆盖）。 -->
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' OR '$(Configuration)' == 'Release' ">
+        <Configuration>Release_Mono</Configuration>
+    </PropertyGroup>
     <PropertyGroup>
         <Configuration Condition=" '$(Configuration)' == '' ">Release_IL2CPP_Unhollower</Configuration>
         <OutputType>Library</OutputType>
